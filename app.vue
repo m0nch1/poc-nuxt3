@@ -1,5 +1,9 @@
+<script setup lang="ts">
+const config = useRuntimeConfig()
+</script>
+
 <template>
   <div>
-    <NuxtWelcome />
+    {{ config }}
   </div>
 </template>
