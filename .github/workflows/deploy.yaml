@@ -9,8 +9,6 @@ jobs:
       contents: read
       deployments: write
     timeout-minutes: 10
-    env:
-      NUXT_PUBLIC_API_HOST: https://poc-nuxt3.pages.dev/api/graphql
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
