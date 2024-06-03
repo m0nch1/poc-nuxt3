@@ -9,6 +9,10 @@ jobs:
       contents: read
       deployments: write
     timeout-minutes: 10
+    env:
+      NUXT_API_SECRET: production-secret
+      NUXT_PUBLIC_API_BASE: https://production.example.com
+      GQL_HOST: https://production.example.com
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
@@ -25,9 +29,6 @@ jobs:
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
-        env:
-          NUXT_API_SECRET: production-secret
-          NUXT_PUBLIC_API_BASE: https://production.example.com
         with:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

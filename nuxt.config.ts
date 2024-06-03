@@ -12,9 +12,9 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    apiSecret: process.env.NUXT_API_SECRET, // can be overridden by NUXT_API_SECRET environment variable
+    apiSecret: "", // can be overridden by NUXT_API_SECRET environment variable
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE, // can be overridden by NUXT_PUBLIC_API_BASE environment variable
+      apiBase: "", // can be overridden by NUXT_PUBLIC_API_BASE environment variable
       "graphql-client": {
         clients: {
           default: {
