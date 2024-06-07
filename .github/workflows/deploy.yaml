@@ -19,7 +19,7 @@ jobs:
     uses: ./.github/workflows/ci.yaml
 
   deploy-staging:
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging' || github.ref == 'refs/heads/main' }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging') || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
     needs: ci
     runs-on: ubuntu-latest
     permissions:
@@ -52,7 +52,7 @@ jobs:
           command: pages deploy dist --project-name=staging-poc-nuxt3 --commit-dirty=true
 
   deploy-production:
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production' || github.ref == 'refs/heads/main' }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production') || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
     needs: ci
     runs-on: ubuntu-latest
     permissions:
