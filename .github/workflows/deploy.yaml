@@ -1,9 +1,59 @@
 name: deploy cloudflare pages
 
-on: push
+on: 
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the environment to deploy'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
 
 jobs:
-  deploy:
+  ci:
+    uses: ./.github/workflows/ci.yaml
+
+  deploy-staging:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging' || github.ref == 'refs/heads/main' }}
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    timeout-minutes: 10
+    env:
+      NUXT_API_SECRET: staging-secret
+      NUXT_PUBLIC_API_BASE: https://staging.example.com
+      GQL_HOST: https://staging.example.com
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm run build-prod
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: pages deploy dist --project-name=staging-poc-nuxt3 --commit-dirty=true
+
+  deploy-production:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production' || github.ref == 'refs/heads/main' }}
+    needs: ci
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -33,4 +83,3 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: pages deploy dist --project-name=poc-nuxt3 --commit-dirty=true
-  
