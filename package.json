@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
+    "build-prod": "nuxt build --dotenv .env.production",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
@@ -11,6 +12,7 @@
   },
   "dependencies": {
     "nuxt": "^3.11.2",
+    "nuxt-graphql-client": "^0.2.34",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
